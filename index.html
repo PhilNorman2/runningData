@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)file:///Users/philnorman/runningData/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <title>Running Data</title>
+    </head>
+    <style>
+    input[type=submit] {
+	background-color: cyan;
+	}
+    h2.b {
+        font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+    <body>
+        <h2 class="b" style="color:darkcyan">Phil's Running Highlights</h2>
+
+	<form action ="javascript:;" onsubmit="showResults(this)">
+	 Input Start Date:<br>
+	 <input type="text" name="startDate" id="startDate" value="2019-01-01">
+	 <br>
+	 Input End Date:<br>
+	 <input type="text" name="endDate" id="endDate" value="2019-12-31">
+	 <br><br>
+	 <input type="submit" value="Submit">
+	</form>
+
+        <br><br>
+
+        <p id="results"></p>
+
+        <script>
+	  function showResults(formData) {
+            var url = "";
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // action to be performed when the document is ready:
+                    var response = JSON.parse(xhttp.responseText);
+                    console.log("response in object form: " + response);
+                    results = response.results;
+                    console.log("results in object form: " + results);
+                    var output = "";
+                    output += "<table border='1'>";
+                    for(var i=0; i < results.length; i++) {
+                        output += '<tr><td style="color:darkcyan">' + results[i].label + ' ' + '</td><td style="color:black">' + results[i].value + '</td></tr>';
+
+                    }
+                    console.log(output);
+                    document.getElementById('results').innerHTML = output;
+                }
+            };
+            //xhttp.open("GET", "results.json", true);
+	    var startDate = formData.startDate.value;
+	    var endDate = formData.endDate.value;
+	    console.log("startDate: " + startDate);
+	    console.log("endDate: " + formData.endDate.value);
+	    var url = "http://localhost:5000/" + startDate + "/" + endDate;
+	    console.log("url: " + url);
+            xhttp.open("GET", url, true);
+            xhttp.send();
+          };
+            
+        </script>
+    
+</body></html>
