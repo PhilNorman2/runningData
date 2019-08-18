@@ -1,0 +1,28 @@
+{
+  "name": "runningdata",
+  "version": "1.0.0",
+  "description": "runningdata node package.json file",
+  "main": "server.js",
+  "dependencies": {
+    "datetime": "^0.0.3",
+    "csv-parser": "^2.3.0",
+    "express": "^4.17.1",
+    "mssql": "^5.1.0",
+    "node-datetime": "^2.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhilNorman2/runningData.git"
+  },
+  "author": "Phil Norman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PhilNorman2/runningData/issues"
+  },
+  "homepage": "https://github.com/PhilNorman2/runningData#readme"
+}
