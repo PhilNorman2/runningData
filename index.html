@@ -13,14 +13,19 @@
         }
     </style>
     <body>
-        <h2 class="b" style="color:darkcyan">Phil's Running Highlights</h2>
+        <h2 class="b" style="color:darkcyan">Phil's Garmin Activities</h2>
 
 	<form action ="javascript:;" onsubmit="showResults(this)">
+	 Select Activity:<br><br>
+	 <input type="radio" name="activity" value="running" checked> Running<br>
+	 <input type="radio" name="activity" value="cycling"> Cycling<br>
+	 <br>
 	 Input Start Date:<br>
-	 <input type="text" name="startDate" id="startDate" value="2019-01-01">
+	 <input type="date" name="startDate" id="startDate">
 	 <br>
 	 Input End Date:<br>
-	 <input type="text" name="endDate" id="endDate" value="2019-12-31">
+	 <!-- <input type="date" name="endDate" id="endDate" value="2019-12-31"> -->
+	 <input type="date" name="endDate" id="endDate">
 	 <br><br>
 	 <input type="submit" value="Submit">
 	</form>
@@ -30,6 +35,23 @@
         <p id="results"></p>
 
         <script>
+
+	  //Set the start date to the first day of the current month
+
+	  var startField = document.querySelector('#startDate');
+	  var startDate = new Date();
+	  startField.value = startDate.getFullYear().toString() + '-' + (startDate.getMonth() + 1).toString().padStart(2, 0) + '-' + '01';
+	  //console.log("startField: " + startField.value);
+
+	  // Set the end date to the current date
+
+	  var endField = document.querySelector('#endDate');
+	  var endDate = new Date();
+	  endField.value = endDate.getFullYear().toString() + '-' + (endDate.getMonth() + 1).toString().padStart(2, 0) + '-' + endDate.getDate().toString().padStart(2, 0);
+	  //console.log("endField: " + endField.value);
+            
+
+	  // Ajax call to format stat results
 	  function showResults(formData) {
             var url = "";
             var xhttp = new XMLHttpRequest();
@@ -53,14 +75,21 @@
             //xhttp.open("GET", "results.json", true);
 	    var startDate = formData.startDate.value;
 	    var endDate = formData.endDate.value;
-	    console.log("startDate: " + startDate);
-	    console.log("endDate: " + formData.endDate.value);
-	    var url = "http://localhost:5000/" + startDate + "/" + endDate;
-	    console.log("url: " + url);
-            xhttp.open("GET", url, true);
-            xhttp.send();
+	    if (startDate > endDate) {
+		document.getElementById('results').innerHTML = "Start Date must be less than or equal to End Date";
+		} 
+	    else {
+	    	var activity = formData.activity.value;
+	    	console.log("startDate: " + startDate);
+	    	console.log("endDate: " + formData.endDate.value);
+	    	console.log("activity: " + activity);
+	    	var url = "http://localhost:5000/" + startDate + "/" + endDate + "/" + activity;
+	    	console.log("url: " + url);
+            	xhttp.open("GET", url, true);
+            	xhttp.send();
+		}
           };
-            
+
         </script>
     
 </body></html>
