@@ -1,27 +1,23 @@
 var express = require('express');
 var app = express();
 
-app.get('/:startDate/:endDate/:activity', function (req, res) {
+app.get('/:startDate/:endDate', function (req, res) {
 	
     var format = req.params.format,   
        	startDate = req.params.startDate,
        	endDate = req.params.endDate;
-	activity = req.params.activity;
 
     sql = require("mssql");
 
     var config = {
         user:  'sa',
-        password: 'Beyond2018*',
+        password: 'Your*Password*Here',
         server: 'localhost',
         database: 'Running'
     };
 
     console.log("startDate: " + startDate); 
-    console.log("endDate: " + endDate); 
-    console.log("activity: " + activity); 
 
-    sql.close(); // in case connection was left open
     sql.connect(config, function (err) {
         if (err) {
             console.log(err);
@@ -32,18 +28,12 @@ app.get('/:startDate/:endDate/:activity', function (req, res) {
 	    //request.input('startDate', sql.Date, '2019-06-01');
 	    request.input('startDate', sql.Date, startDate);
 	    request.input('endDate', sql.Date, endDate);
-	    request.input('activity', sql.NVARCHAR(50), activity);
-	    request.execute('runningStats', function (err,result) {
-                if (err) {
-			console.log("Encountered query error: " + err);
-			sql.close();
-                        }
-		else {
-                	console.log(result.recordset[0]);
-                	res.append('Access-Control-Allow-Origin', ['*']);
-                	res.send(buildResultsJSON(result.recordset[0]));
-                	sql.close();
-			}
+	    request.execute('runningStats2', function (err,result) {
+                if (err) console.log(err)
+                console.log(result.recordset[0]);
+                res.append('Access-Control-Allow-Origin', ['*']);
+                res.send(buildResultsJSON(result.recordset[0]));
+                sql.close();
             });
         }
     });
