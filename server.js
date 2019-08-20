@@ -12,7 +12,7 @@ app.get('/:startDate/:endDate/:activity', function (req, res) {
 
     var config = {
         user:  'sa',
-        password: 'Beyond2018*',
+        password: 'Your*Password*Here',
         server: 'localhost',
         database: 'Running'
     };
