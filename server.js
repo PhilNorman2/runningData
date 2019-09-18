@@ -1,5 +1,50 @@
 var express = require('express');
 var app = express();
+var http = require('http');
+var path = require('path');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '5000');
+app.set('port', port);
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * create path for accessing files 
+ */
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+/**
+ * route for browser access
+ */
+
+app.get('/', function (req,res) { 
+        console.log('in / route');
+	res.sendFile(__dirname + '/index.html');
+});
+
+
+/**
+ * route for API access
+ */
 
 app.get('/:startDate/:endDate/:activity', function (req, res) {
 	
@@ -7,14 +52,26 @@ app.get('/:startDate/:endDate/:activity', function (req, res) {
        	startDate = req.params.startDate,
        	endDate = req.params.endDate;
 	activity = req.params.activity;
+    
+    console.log("startDate: " + startDate); 
+    console.log("endDate: " + endDate); 
+    console.log("activity: " + activity); 
+    console.log("reached api route");
+    console.log("host:port " + req.hostname + ':' + port);
+    //res.sendFile(__dirname + '/mockJSONresponse.json');
+
+/**
+ * configure SQL server connection variables
+ */
 
     sql = require("mssql");
+
 
     var config = {
         user:  'sa',
         password: 'Your*Password*Here',
         server: 'localhost',
-        database: 'Running'
+        database: 'running'
     };
 
     console.log("startDate: " + startDate); 
@@ -22,18 +79,25 @@ app.get('/:startDate/:endDate/:activity', function (req, res) {
     console.log("activity: " + activity); 
 
     sql.close(); // in case connection was left open
+
+/**
+ * make SQL server connection, execute stored procedure query, and return results
+ */
+
     sql.connect(config, function (err) {
         if (err) {
+            
             console.log(err);
+	    res.send("Connection Error");
         }
         else {
             console.log('success!');
             const request = new sql.Request;
-	    //request.input('startDate', sql.Date, '2019-06-01');
 	    request.input('startDate', sql.Date, startDate);
 	    request.input('endDate', sql.Date, endDate);
 	    request.input('activity', sql.NVARCHAR(50), activity);
-	    request.execute('runningStats', function (err,result) {
+	    //request.execute('runningStats', function (err,result) {
+	    request.execute('runningStats-rds', function (err,result) {
                 if (err) {
 			console.log("Encountered query error: " + err);
 			sql.close();
@@ -48,6 +112,10 @@ app.get('/:startDate/:endDate/:activity', function (req, res) {
         }
     });
 });    
+
+/**
+ * format JSON for response from query results
+ */
 
 function buildResultsJSON(resultsObj) {
     var resultsJSON = JSON.stringify(resultsObj);
@@ -67,6 +135,10 @@ function buildResultsJSON(resultsObj) {
     return fmtResultsJSON;
 }
 
-var server = app.listen(5000, function () {
-    console.log('Server is running..');
+/**
+ * initiate server
+ */
+
+const server = http.createServer(app).listen(port, () => {
+  console.log(`listening on ${port}`)
 });
