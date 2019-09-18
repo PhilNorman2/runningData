@@ -83,6 +83,7 @@
 	    	console.log("startDate: " + startDate);
 	    	console.log("endDate: " + formData.endDate.value);
 	    	console.log("activity: " + activity);
+                // url points to server:port where server.js is running, modify as needed 
 	    	var url = "http://localhost:5000/" + startDate + "/" + endDate + "/" + activity;
 	    	console.log("url: " + url);
             	xhttp.open("GET", url, true);
