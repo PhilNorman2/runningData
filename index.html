@@ -71,6 +71,12 @@
                     console.log(output);
                     document.getElementById('results').innerHTML = output;
                 }
+		else if (this.readyState == 4 && this.status == 0){ 
+		
+		    console.log("The ajax server is not responding" + " readyState: " + this.readyState + " status: " + this.status);
+                    document.getElementById('results').innerHTML = "The ajax server is not responding";
+		}
+
             };
             //xhttp.open("GET", "results.json", true);
 	    var startDate = formData.startDate.value;
