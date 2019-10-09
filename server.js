@@ -88,7 +88,7 @@ app.get('/:startDate/:endDate/:activity', function (req, res) {
         if (err) {
             
             console.log(err);
-	    res.send("Connection Error");
+            res.send(buildResultsJSON(err));
         }
         else {
             console.log('success!');
