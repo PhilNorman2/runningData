@@ -3,6 +3,12 @@ var app = express();
 var http = require('http');
 var path = require('path');
 
+//load .env file
+require('dotenv').config();
+//console.log("All env variables: " + buildResultsJSON(process.env));
+var OS = require('os');
+console.log("OS.hostnanme: " +  OS.hostname());
+
 /**
  * Get port from environment and store in Express.
  */
@@ -67,11 +73,12 @@ app.get('/:startDate/:endDate/:activity', function (req, res) {
     sql = require("mssql");
 
 
+
     var config = {
-        user:  'sa',
-        password: 'Your*Password*Here',
-        server: 'localhost',
-        database: 'running'
+        user:  process.env.RDS_USERNAME,
+        password: process.env.RDS_PASSWORD,
+        server: process.env.RDS_HOSTNAME,
+        database: process.env.RDS_DATABASE 
     };
 
     console.log("startDate: " + startDate); 
