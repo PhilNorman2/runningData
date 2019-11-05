@@ -1,0 +1,95 @@
+doctype html
+// saved from url=(0047)file:///Users/philnorman/runningData/index.html
+html
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    title Running Data
+    style.
+      input[type=submit] {
+      background-color: cyan;
+      }
+      h2.b {
+      font-family: Arial, Helvetica, sans-serif;
+      }
+  body
+    h2.b(style='color:darkcyan') Phil's Garmin Activities
+    form(action='javascript:;', onsubmit='showResults(this)')
+      | Select Activity:
+      br
+      br
+      input(type='radio', name='activity', value='running', checked='')
+      |  Running
+      br
+      input(type='radio', name='activity', value='cycling')
+      |  Cycling
+      br
+      br
+      |          Input Start Date:
+      br
+      input#startDate(type='date', name='startDate')
+      br
+      |          Input End Date:
+      br
+      // <input type="date" name="endDate" id="endDate" value="2019-12-31">
+      input#endDate(type='date', name='endDate')
+      br
+      br
+      input(type='submit', value='Submit')
+    br
+    br
+    p#results
+    script.
+      //Set the start date to the first day of the current month
+      var startField = document.querySelector('#startDate');
+      var startDate = new Date();
+      startField.value = startDate.getFullYear().toString() + '-' + (startDate.getMonth() + 1).toString().padStart(2, 0) + '-' + '01';
+      console.log("startField: " + startField.value);
+      // Set the end date to the current date
+      var endField = document.querySelector('#endDate');
+      var endDate = new Date();
+      endField.value = endDate.getFullYear().toString() + '-' + (endDate.getMonth() + 1).toString().padStart(2, 0) + '-' + endDate.getDate().toString().padStart(2, 0);
+      //console.log("endField: " + endField.value);
+      // Ajax call to format stat results
+      function showResults(formData) {
+      var url = "";
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+      // action to be performed when the document is ready:
+      var response = JSON.parse(xhttp.responseText);
+      console.log("response in object form: " + response);
+      results = response.results;
+      console.log("results in object form: " + results);
+      var output = "";
+      output += "<table border='1'>";
+      for(var i=0; i < results.length; i++) {
+      output += '<tr><td style="color:darkcyan">' + results[i].label + ' ' + '</td><td style="color:black">' + results[i].value + '</td></tr>';
+      }
+      console.log(output);
+      document.getElementById('results').innerHTML = output;
+      }
+      else if (this.readyState == 4 && this.status == 0){
+      console.log("The ajax server is not responding" + " readyState: " + this.readyState + " status: " + this.status);
+      document.getElementById('results').innerHTML = "The ajax server is not responding";
+      }
+      };
+      //xhttp.open("GET", "results.json", true);
+      var startDate = formData.startDate.value;
+      var endDate = formData.endDate.value;
+      if (startDate > endDate) {
+      document.getElementById('results').innerHTML = "Start Date must be less than or equal to End Date";
+      }
+      else {
+      var activity = formData.activity.value;
+      console.log("startDate: " + startDate);
+      console.log("endDate: " + formData.endDate.value);
+      console.log("activity: " + activity);
+      // url points to server:port where server.js is running, modify as needed
+      //var url = "http://localhost:5000/" + startDate + "/" + endDate + "/" + activity;
+      var url = "#{API_host}" + "/" + startDate + "/" + endDate + "/" + activity;
+      console.log("url: " + url);
+      xhttp.open("GET", url, true);
+      xhttp.send();
+      }
+      };
+
