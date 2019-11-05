@@ -11,4 +11,4 @@ To start application locally clone the respository locally and run:
 npm install
 npm start
 
-Note: This application has been deployed and tested to AWS Elastic Beanstalk.
+Note: This application has been deployed and tested to AWS Elastic Beanstalk. Install instructions are in buildspec.yml
