@@ -8,7 +8,6 @@ require('dotenv').config();
 //console.log("All env variables: " + buildResultsJSON(process.env));
 var OS = require('os');
 console.log("OS.hostnanme: " +  OS.hostname());
-console.log("RDS_HOSTNAME: " +  process.env.RDS_HOSTNAME);
 
 /**
  * Get port from environment and store in Express.
