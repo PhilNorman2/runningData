@@ -3,6 +3,13 @@ var app = express();
 var http = require('http');
 var path = require('path');
 
+//load .env file
+require('dotenv').config();
+//console.log("All env variables: " + buildResultsJSON(process.env));
+var OS = require('os');
+console.log("OS.hostnanme: " +  OS.hostname());
+console.log("RDS_HOSTNAME: " +  process.env.RDS_HOSTNAME);
+
 /**
  * Get port from environment and store in Express.
  */
@@ -36,11 +43,15 @@ app.use(express.static(path.join(__dirname, 'public')));
  * route for browser access
  */
 
-app.get('/', function (req,res) { 
-        console.log('in / route');
-	res.sendFile(__dirname + '/index.html');
-});
+//set view engine
+app.set("view engine",'jade');
+console.log("EXPS_HOST: " + process.env.EXPS_HOST);
+app.get('/', function (req, res) {
 
+        console.log('in / route');
+        res.render('index', {API_host: process.env.EXPS_HOST});
+
+});
 
 /**
  * route for API access
@@ -67,11 +78,12 @@ app.get('/:startDate/:endDate/:activity', function (req, res) {
     sql = require("mssql");
 
 
+
     var config = {
-        user:  'sa',
-        password: 'Your*Password*Here',
-        server: 'localhost',
-        database: 'running'
+        user:  process.env.RDS_USERNAME,
+        password: process.env.RDS_PASSWORD,
+        server: process.env.RDS_HOSTNAME,
+        database: process.env.RDS_DATABASE 
     };
 
     console.log("startDate: " + startDate); 
