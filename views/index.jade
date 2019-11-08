@@ -42,7 +42,8 @@ html
       //Set the start date to the first day of the current month
       var startField = document.querySelector('#startDate');
       var startDate = new Date();
-      startField.value = startDate.getFullYear().toString() + '-' + (startDate.getMonth() + 1).toString().padStart(2, 0) + '-' + '01';
+      //startField.value = startDate.getFullYear().toString() + '-' + (startDate.getMonth() + 1).toString().padStart(2, 0) + '-' + '01';
+      startField.value = startDate.getFullYear().toString() + '-' + '01'  + '-' + '01';
       console.log("startField: " + startField.value);
       // Set the end date to the current date
       var endField = document.querySelector('#endDate');
